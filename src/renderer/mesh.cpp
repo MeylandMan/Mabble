@@ -10,10 +10,6 @@ Mesh::Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshT
     setupMesh();
 }
 
-Mesh::~Mesh() {
-    //deleteMesh();
-}
-
 void Mesh::deleteMesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);

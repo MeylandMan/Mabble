@@ -9,6 +9,20 @@ void Model::Draw(Shader& shader)
     m_DrawCall++;
 }
 
+Model::~Model() {
+    deleteModel();
+}
+void Model::deleteModel() {
+    for (MeshTexture texture : textures_loaded) {
+        glDeleteTextures(1, &texture.id);
+        texture.id = 0;
+    }
+
+    for (Mesh mesh : meshes) {
+        mesh.deleteMesh();
+    }
+    textures_loaded.clear();
+}
 void Model::loadModel(string& path)
 {
     removeBackHash(path);

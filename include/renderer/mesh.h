@@ -48,9 +48,8 @@ public:
         }
     }
    */
-   
 
-    ~Mesh();
+    void deleteMesh();
     void Draw(Shader& shader);
 public:
     vector<Vertex> vertices;
@@ -60,5 +59,5 @@ public:
 private:
     unsigned int VBO = 0, EBO = 0;
     void setupMesh();
-    void deleteMesh();
+    
 };

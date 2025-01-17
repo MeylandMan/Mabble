@@ -14,30 +14,18 @@ public:
     {
         loadModel(path);
     }
- 
-    void negateTexCoordY(string const& path, bool x) {
-        for (unsigned int i = 0; i < meshes.size(); i++)
-        {
-            for (unsigned int j = 0; j < meshes[i].vertices.size(); j++) {
-                meshes[i].vertices[j].TexCoord.y = -meshes[i].vertices[j].TexCoord.y;
-           }
-        }
-        m_NegativeTexCoordY = x;
-    }
+    ~Model();
     /*
+    
+    */
+
     //Delete the copy constructor/assignment.
     Model(const Model&) = delete;
     Model& operator=(const Model&) = delete;
 
     Model(Model&& other)
     {
-        // Delete textures before exiting the program
-        for (MeshTexture& texture : textures_loaded) {
-            glDeleteTextures(1, &texture.id);
-            texture.id = 0;
-        }
-
-        textures_loaded.clear();
+        deleteModel();
     }
 
     Model& operator=(Model&& other)
@@ -45,12 +33,11 @@ public:
         //ALWAYS check for self-assignment.
         if (this != &other)
         {
+            swap(meshes, other.meshes);
             swap(textures_loaded, other.textures_loaded);
         }
         return *this;
     }
-    */
-
     void Draw(Shader& shader);
 
     vector<MeshTexture> textures_loaded;
@@ -60,6 +47,7 @@ public:
 
 private:
     void loadModel(string& path);
+    void deleteModel();
     void processNode(aiNode* node, const aiScene* scene);
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
