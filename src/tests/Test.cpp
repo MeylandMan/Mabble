@@ -33,7 +33,7 @@ namespace test {
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-		m_Projection = glm::perspective(glm::radians(cam->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.f);
+		m_Projection = glm::perspective(glm::radians(cam->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
 
 		m_Shader.bind();
 		m_Shader.setUniformMatrix4f("u_View", cam->GetViewMatrix());
@@ -42,7 +42,7 @@ namespace test {
 		//Sponza
 		{
 			glm::mat4 m_SponzaMatrix(1.f);
-			m_SponzaMatrix = glm::scale(m_SponzaMatrix, glm::vec3(0.01f));
+			//m_SponzaMatrix = glm::scale(m_SponzaMatrix, glm::vec3(0.01f));
 			m_Shader.setUniformMatrix4f("u_Model", m_SponzaMatrix);
 			m_Shader.setUniform1i("u_NegativeTexCoord", m_SponzaModel.m_NegativeTexCoordY);
 			renderer.DrawModel(m_SponzaModel, m_Shader);

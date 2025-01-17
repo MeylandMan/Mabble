@@ -15,40 +15,9 @@ using namespace std;
 class Mesh {
 public:
     Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshTexture>& textures);
-   /*
-   //Delete the copy constructor/assignment.
-    Mesh(const Mesh&) = delete;
-    Mesh& operator=(const Mesh&) = delete;
 
-    Mesh(Mesh&& other) : VAO(other.VAO), VBO(other.VBO), EBO(other.EBO), textures(other.textures)
-    {
-        other.VAO = 0;
-        other.VBO = 0;
-        other.EBO = 0;
-        // Delete textures before exiting the program
-        for (MeshTexture& texture : textures) {
-            texture.id = 0;
-        }
-
-        textures.clear();
-    }
-
-    Mesh& operator=(Mesh&& other)
-    {
-        //ALWAYS check for self-assignment.
-        if (this != &other)
-        {
-            deleteMesh();
-            swap(VAO, other.VAO);
-            swap(VBO, other.VBO);
-            swap(EBO, other.EBO);
-            //swap(vertices, other.vertices);
-            //swap(indices, other.indices);
-            //swap(textures, other.textures);
-        }
-    }
-   */
-
+    void setShininess(float x) { m_Shiny = x; }
+    float getShininess() { return m_Shiny; }
     void deleteMesh();
     void Draw(Shader& shader);
 public:
@@ -56,7 +25,10 @@ public:
     vector<unsigned int> indices;
     vector<MeshTexture> textures;
     unsigned int VAO = 0;
+protected:
+    float shininess;
 private:
+    float m_Shiny = 32.f;
     unsigned int VBO = 0, EBO = 0;
     void setupMesh();
     

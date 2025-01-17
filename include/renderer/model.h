@@ -18,7 +18,7 @@ public:
     /*
     
     */
-
+    
     //Delete the copy constructor/assignment.
     Model(const Model&) = delete;
     Model& operator=(const Model&) = delete;
@@ -44,7 +44,7 @@ public:
     vector<Mesh>meshes;
     string directory;
     bool gammaCorrection;
-    bool m_NegativeTexCoordY;
+    bool m_NegativeTexCoordY = false;
 private:
     void loadModel(string& path);
     void deleteModel();

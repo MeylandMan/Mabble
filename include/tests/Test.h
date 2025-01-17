@@ -53,7 +53,7 @@ namespace test {
 		void onRender(GLFWwindow* window, Renderer renderer, glm::mat4* view, Camera* camera) override;
 		void onImGUI() override;
 	private:
-		string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
+		string m_SponzaModelPath = RESOURCES_PATH "objects/Toon Link/Toon Link.obj";
 		Model m_SponzaModel = Model(m_SponzaModelPath);
 		Shader m_Shader;
 		glm::mat4 m_Projection;

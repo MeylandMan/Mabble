@@ -42,7 +42,7 @@ namespace test {
 
 		m_Shader.setUniformMatrix4f("u_View", *view);
 		m_Shader.setUniformMatrix4f("u_Proj", m_Projection);
-		m_Shader.setUniform1i("u_NegativeTexCoord", m_NegateYCoordinate);
+		//m_Shader.setUniform1i("u_NegativeTexCoord", m_NegateYCoordinate);
 
 		m_ModelMatrix = glm::mat4(1.0f);
 		m_ModelMatrix = glm::translate(m_ModelMatrix, m_ModelPosition);
@@ -74,7 +74,7 @@ namespace test {
 		}
 
 		ImGui::Checkbox("Draw edges", &m_PolygonMode);
-		ImGui::Checkbox("Negate TexCoord Y coordinate", &m_NegateYCoordinate);
+		ImGui::Checkbox("Negate TexCoord Y coordinate", &m_Model.m_NegativeTexCoordY);
 		ImGui::SliderFloat3("Position", &m_ModelPosition.x, -10.f, 10.f);
 		ImGui::SliderFloat3("Rotation", &m_ModelRotation.x, -90.f, 90.f);
 		ImGui::SliderFloat3("Scale", &m_ModelScale.x, 0.01f, 2.f);

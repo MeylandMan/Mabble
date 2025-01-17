@@ -14,7 +14,7 @@ uniform mat4 u_Proj;
 
 void main()
 {
-	FragPos = (vec4(in_Position, 1.0) * u_Model).xyz;
+	FragPos = (vec4(in_Position, 1) * u_Model).xyz;
 	v_Normal = mat3(inverse(u_Model)) * in_Normal;
 	v_TexCoords = in_Texcoords;
 
