@@ -383,6 +383,7 @@ struct aiString {
     const char *C_Str() const {
         return data;
     }
+
 #endif // !__cplusplus
 
     /** Binary length of the string excluding the terminal 0. This is NOT the

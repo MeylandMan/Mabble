@@ -77,6 +77,7 @@ void main()
 	for(int i = 0; i < NR_SPOT_LIGHTS; i++)
 		result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
 
+	result = clamp(result, 0.f, 1.f);
 	fragColor = vec4(result, 1.0);
 }
 

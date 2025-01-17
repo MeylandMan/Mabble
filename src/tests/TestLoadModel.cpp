@@ -13,6 +13,10 @@ namespace test {
 		);
 
 	}
+
+	TestLoadModel::~TestLoadModel() {
+		m_Shader.clear();
+	}
 	void TestLoadModel::onUpdate(float deltaTime) {
 		if (m_NegateYCoordinate != m_PreviousCheck) {
 			m_PreviousCheck = m_NegateYCoordinate;
@@ -49,7 +53,7 @@ namespace test {
 
 		m_ModelMatrix = glm::scale(m_ModelMatrix, m_ModelScale);
 		m_Shader.setUniformMatrix4f("u_Model", m_ModelMatrix);
-		m_Model.Draw(m_Shader);
+		renderer.DrawModel(m_Model, m_Shader);
 	}
 
 	void TestLoadModel::onImGUI() {
@@ -60,6 +64,11 @@ namespace test {
 		if (fileDialog.HasSelected())
 		{
 			m_ModelPath = fileDialog.GetSelected().string();
+			for (char& c : m_ModelPath) {
+				if (c == '\\') {
+					c = '/';
+				}
+			}
 			m_Model = Model(m_ModelPath);
 			fileDialog.ClearSelected();
 		}
@@ -69,6 +78,5 @@ namespace test {
 		ImGui::SliderFloat3("Position", &m_ModelPosition.x, -10.f, 10.f);
 		ImGui::SliderFloat3("Rotation", &m_ModelRotation.x, -90.f, 90.f);
 		ImGui::SliderFloat3("Scale", &m_ModelScale.x, 0.1f, 2.f);
-		ImGui::Text("Negate : %.0f", &m_NegateYCoordinate);
 	}
 }

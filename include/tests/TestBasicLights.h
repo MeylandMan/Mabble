@@ -227,6 +227,7 @@ namespace test {
 			glm::vec3(1.5f,  0.2f, -1.5f),
 			glm::vec3(-1.3f,  1.0f, -1.5f)
 		};
+		
 		glm::vec3 m_ObjScale;
 		glm::vec3 m_ObjRotation[10];
 		glm::mat4 m_ObjModel;

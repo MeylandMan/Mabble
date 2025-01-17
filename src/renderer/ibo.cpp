@@ -9,7 +9,15 @@ ibo::ibo(const unsigned int* data, unsigned int count) : m_Count(count)  {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count, data, GL_STATIC_DRAW);
 }
 
-ibo::~ibo() { deleteEBO(); }
+ibo::ibo(std::vector<unsigned int>* data) : m_Count(data->size()) {
+	_ASSERT(sizeof(unsigned int) == sizeof(GLuint));
+
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count, &data[0], GL_STATIC_DRAW);
+}
+
+ibo::~ibo() { glDeleteBuffers(1, &ID); }
 
 
 void ibo::Bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID); }

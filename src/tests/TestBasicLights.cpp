@@ -212,6 +212,7 @@ namespace test {
 				m_ObjModel = glm::translate(m_ObjModel, m_ObjPosition[i]);
 				float angle = 20.0f * i;
 				m_ObjModel = glm::rotate(m_ObjModel, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+				
 				m_ObjModel = glm::scale(m_ObjModel, glm::vec3(1.f));
 				m_ObjShader.setUniformMatrix4f("u_Model", m_ObjModel);
 				renderer.Draw(m_ObjVao, m_Ibo, m_ObjShader);
