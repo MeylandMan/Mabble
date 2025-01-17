@@ -11,6 +11,10 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <Camera.h>
+#include <renderer/lights.h>
+
+#define VECTOR_ZERO glm::vec3(0.f)
+#define VECTOR_UNIT glm::vec3(1.f)
 
 namespace test {
 	class Test {
@@ -53,7 +57,11 @@ namespace test {
 		void onRender(GLFWwindow* window, Renderer renderer, glm::mat4* view, Camera* camera) override;
 		void onImGUI() override;
 	private:
-		string m_SponzaModelPath = RESOURCES_PATH "objects/Toon Link/Toon Link.obj";
+		//Directional light
+		DirLight m_DirLight;
+		SpotLight m_SpotLight;
+
+		string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
 		Model m_SponzaModel = Model(m_SponzaModelPath);
 		Shader m_Shader;
 		glm::mat4 m_Projection;
