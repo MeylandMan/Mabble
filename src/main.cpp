@@ -132,6 +132,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 }
 
+class DefaultScene {
+public:
+	DefaultScene();
+	void onRender(GLFWwindow* window, Renderer renderer);
+	void onImGUI();
+private:
+	string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
+	Model m_SponzaModel = Model(m_SponzaModelPath);
+	Shader m_Shader;
+	glm::mat4 m_Projection;
+};
 int main(void)
 {
 	GLFWwindow* window;
@@ -300,6 +311,9 @@ int main(void)
 					else if (ImGui::Button("VFX")) {
 						//Do nothing for now
 					}
+					else if (ImGui::Button("Default Shader")) {
+						//Do nothing for now
+					}
 					break;
 				case 1:
 					if (ImGui::Button("<-")) {
@@ -339,4 +353,31 @@ int main(void)
 	}
 	delete CurrentTest;
 	return 0;
+}
+
+DefaultScene::DefaultScene() {
+	m_Shader.loadShaderProgramFromFile(SHADERS_PATH "Default/vertex.vert", SHADERS_PATH "Default/fragment.frag");
+}
+
+void DefaultScene::onRender(GLFWwindow* window, Renderer renderer) {
+	int WINDOW_WIDTH = 0, WINDOW_HEIGHT = 0;
+
+	glfwGetFramebufferSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
+
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
+
+	m_Projection = glm::perspective(glm::radians(cam.Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
+
+	m_Shader.bind();
+	m_Shader.setUniformMatrix4f("u_View", cam.GetViewMatrix());
+	m_Shader.setUniformMatrix4f("u_Proj", m_Projection);
+
+	//Sponza
+	{
+		m_Shader.setUniformMatrix4f("u_Model", glm::mat4(1.f));
+		m_Shader.setUniform1i("u_NegativeTexCoord", m_SponzaModel.m_NegativeTexCoordY);
+	}
+	
+	renderer.DrawModel(m_SponzaModel, m_Shader);
 }

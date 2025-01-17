@@ -44,7 +44,7 @@ public:
     vector<Mesh>meshes;
     string directory;
     bool gammaCorrection;
-
+    bool m_NegativeTexCoordY;
 private:
     void loadModel(string& path);
     void deleteModel();
@@ -52,7 +52,6 @@ private:
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
     vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
     unsigned int m_DrawCall;
-    bool m_NegativeTexCoordY;
 };
 
 void removeBackHash(string& str);
