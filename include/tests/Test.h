@@ -38,12 +38,24 @@ namespace test {
 		}
 
 		void clear() {
-			std::cout << "clearing the list : " << std::endl;
 			m_Tests.clear();
 		}
 
 	private:
 		Test*& m_CurrentTest;
 		std::vector<std::pair<std::string, std::function<Test* ()>>> m_Tests;
+	};
+
+	class DefaultTest : public Test {
+	public:
+		DefaultTest();
+		~DefaultTest();
+		void onRender(GLFWwindow* window, Renderer renderer, glm::mat4* view, Camera* camera) override;
+		void onImGUI() override;
+	private:
+		string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
+		Model m_SponzaModel = Model(m_SponzaModelPath);
+		Shader m_Shader;
+		glm::mat4 m_Projection;
 	};
 }

@@ -132,17 +132,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	}
 }
 
-class DefaultScene {
-public:
-	DefaultScene();
-	void onRender(GLFWwindow* window, Renderer renderer);
-	void onImGUI();
-private:
-	string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
-	Model m_SponzaModel = Model(m_SponzaModelPath);
-	Shader m_Shader;
-	glm::mat4 m_Projection;
-};
+
 int main(void)
 {
 	GLFWwindow* window;
@@ -163,7 +153,7 @@ int main(void)
 #endif
 	int width, height, channels;
 	unsigned char* image = stbi_load(RESOURCES_PATH "../icon.png", &width, &height, &channels, 0);
-	
+
 	window = glfwCreateWindow(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "Mabble", NULL, NULL);
 	if (!window)
 	{
@@ -241,9 +231,7 @@ int main(void)
 
 	//BasicMenuTest->RegisterTest<test::TestClearColor>("Clear Color");
 	//BasicMenuTest->RegisterTest<test::TestCubeDrawing>("Drawing a Cube");
-	
 	short menu_index = 0;
-	
 	while (!glfwWindowShouldClose(window))
 	{
 
@@ -261,19 +249,17 @@ int main(void)
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		view = cam.GetViewMatrix();
-		deltaTime = 1/io.Framerate;
+		deltaTime = 1 / io.Framerate;
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
 		{
-			
-			
 			if (CurrentTest) {
 				CurrentTest->onUpdate(deltaTime);
 
-				
+
 				renderer.Clear();
 				CurrentTest->onRender(window, renderer, &view, &cam);
 
@@ -312,7 +298,9 @@ int main(void)
 						//Do nothing for now
 					}
 					else if (ImGui::Button("Default Shader")) {
-						//Do nothing for now
+						menu_index = 2;
+						CurrentTest = new test::DefaultTest();
+						
 					}
 					break;
 				case 1:
@@ -328,12 +316,19 @@ int main(void)
 					}
 					CurrentTest->onImGUI();
 					break;
+				case 2:
+					if (ImGui::Button("<-")) {
+						
+						menu_index = 0;
+						delete CurrentTest;
+						CurrentTest = menuTest;
+					}
+					CurrentTest->onImGUI();
+					break;
 				}
-
 				ImGui::End();
-			}
 
-			
+			}
 		}
 
 		// Rendering
@@ -355,29 +350,3 @@ int main(void)
 	return 0;
 }
 
-DefaultScene::DefaultScene() {
-	m_Shader.loadShaderProgramFromFile(SHADERS_PATH "Default/vertex.vert", SHADERS_PATH "Default/fragment.frag");
-}
-
-void DefaultScene::onRender(GLFWwindow* window, Renderer renderer) {
-	int WINDOW_WIDTH = 0, WINDOW_HEIGHT = 0;
-
-	glfwGetFramebufferSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
-
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
-
-	m_Projection = glm::perspective(glm::radians(cam.Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
-
-	m_Shader.bind();
-	m_Shader.setUniformMatrix4f("u_View", cam.GetViewMatrix());
-	m_Shader.setUniformMatrix4f("u_Proj", m_Projection);
-
-	//Sponza
-	{
-		m_Shader.setUniformMatrix4f("u_Model", glm::mat4(1.f));
-		m_Shader.setUniform1i("u_NegativeTexCoord", m_SponzaModel.m_NegativeTexCoordY);
-	}
-	
-	renderer.DrawModel(m_SponzaModel, m_Shader);
-}
