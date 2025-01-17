@@ -31,7 +31,7 @@ namespace test {
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.f);
+		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
 
 		// draw in wireframe
 		if(m_PolygonMode)
@@ -77,6 +77,6 @@ namespace test {
 		ImGui::Checkbox("Negate TexCoord Y coordinate", &m_NegateYCoordinate);
 		ImGui::SliderFloat3("Position", &m_ModelPosition.x, -10.f, 10.f);
 		ImGui::SliderFloat3("Rotation", &m_ModelRotation.x, -90.f, 90.f);
-		ImGui::SliderFloat3("Scale", &m_ModelScale.x, 0.1f, 2.f);
+		ImGui::SliderFloat3("Scale", &m_ModelScale.x, 0.01f, 2.f);
 	}
 }

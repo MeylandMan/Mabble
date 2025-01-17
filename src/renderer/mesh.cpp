@@ -11,7 +11,7 @@ Mesh::Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshT
 }
 
 Mesh::~Mesh() {
-    deleteMesh();
+    //deleteMesh();
 }
 
 void Mesh::deleteMesh() {

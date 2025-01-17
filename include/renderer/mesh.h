@@ -16,8 +16,6 @@ class Mesh {
 public:
     Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshTexture>& textures);
    /*
-   
-   */
    //Delete the copy constructor/assignment.
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
@@ -49,6 +47,8 @@ public:
             //swap(textures, other.textures);
         }
     }
+   */
+   
 
     ~Mesh();
     void Draw(Shader& shader);
