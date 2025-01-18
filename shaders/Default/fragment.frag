@@ -30,8 +30,8 @@ struct PointLight {
 	vec3 specular;
 };
 
-#define NR_POINT_LIGHTS 5
-uniform PointLight pointLights[NR_POINT_LIGHTS];
+#define NR_POINT_LIGHT 4
+uniform PointLight pointLights[NR_POINT_LIGHT];
 
 struct SpotLight {
     vec3 position;  
@@ -66,7 +66,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec
 void main()
 {
      /* just using the uniforms so that openGL doesn't PISS ME OF */
-    vec4 t_temp = texture(material.diffuse1, v_TexCoords) * texture(material.specular1, v_TexCoords) * texture(material.normal1, v_TexCoords);
+    vec4 t_temp = texture(material.height1, v_TexCoords) * texture(material.diffuse1, v_TexCoords) * texture(material.normal1, v_TexCoords);
 	vec2 texcoords = v_TexCoords;
 
 	if(!u_NegativeTexCoord)
@@ -81,13 +81,24 @@ void main()
 
 	// phase 1: Directional lighting
 	result = CalcDirLight(dirLight, norm, viewDir, texcoords);
+	
+	/*
 	// phase 2: Point lights
-	for(int i = 0; i < NR_POINT_LIGHTS; i++)
+	for(int i = 0; i < NR_POINT_LIGHT; i++)
 		result += CalcPointLight(pointLights[i], norm, FragPos, viewDir, texcoords);
 	// phase 3: Spot lights
 	result += CalcSpotLight(spotLight, norm, FragPos, viewDir, texcoords);
+	*/
+	
 
+	#if !1
+	if(!u_NegativeTexCoord)
+        fragColor = texture(material.diffuse1, v_TexCoords);
+    else
+        fragColor = texture(material.diffuse1, vec2(v_TexCoords.x, -v_TexCoords.y));
+	#else
 	fragColor = vec4(result, 1.0);
+	#endif
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec2 texcoords) {

@@ -54,14 +54,18 @@ namespace test {
 	public:
 		DefaultTest();
 		~DefaultTest();
+
+		void onUpdate(float deltaTime) override;
 		void onRender(GLFWwindow* window, Renderer renderer, glm::mat4* view, Camera* camera) override;
 		void onImGUI() override;
 	private:
-		//Directional light
+		//Light Casters
 		DirLight m_DirLight;
 		SpotLight m_SpotLight;
-
-		string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
+		PointLight m_pointLights[4];
+		//string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
+		//string m_SponzaModelPath = RESOURCES_PATH "objects/Toon Link/Toon Link.obj";
+		string m_SponzaModelPath = RESOURCES_PATH "objects/backpack/backpack.obj";
 		Model m_SponzaModel = Model(m_SponzaModelPath);
 		Shader m_Shader;
 		glm::mat4 m_Projection;

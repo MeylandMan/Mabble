@@ -201,7 +201,6 @@ namespace test {
 			}
 
 
-
 			m_ObjShader.setUniform1i("material.diffuse", 0);
 			m_ObjShader.setUniform1i("material.specular", 1);
 			m_ObjShader.setUniform1f("material.shininess", m_Shininess);
