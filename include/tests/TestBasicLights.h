@@ -212,7 +212,7 @@ namespace test {
 		float linear = 0.09f;
 		float quadric = 0.032;
 		float CutOff = 15.f;
-
+		
 		//Object
 		glm::vec4 ObjColor;
 		glm::vec3 m_ObjPosition[10] = {

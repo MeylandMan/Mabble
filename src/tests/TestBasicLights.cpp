@@ -143,6 +143,8 @@ namespace test {
 			m_ObjShader.setUniform1f("pointLights[0].constant", 1.0f);
 			m_ObjShader.setUniform1f("pointLights[0].linear", 0.09f);
 			m_ObjShader.setUniform1f("pointLights[0].quadratic", 0.032f);
+
+			glm::vec3(0.f, 1.f, -11.f)
 			*/
 			
 			// point light 2
@@ -204,7 +206,6 @@ namespace test {
 			m_ObjShader.setUniform1i("material.diffuse", 0);
 			m_ObjShader.setUniform1i("material.specular", 1);
 			m_ObjShader.setUniform1f("material.shininess", m_Shininess);
-
 			for (unsigned int i = 0; i < 10; i++)
 			{
 				m_ObjModel = glm::mat4(1.0f);
@@ -251,6 +252,8 @@ namespace test {
 			}
 
 		}
+
+		
 	}
 
 	void  TestBasicLights::onImGUI() {
