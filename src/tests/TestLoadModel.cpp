@@ -32,7 +32,7 @@ namespace test {
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10.f);
+		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.f);
 
 		// draw in wireframe
 		if(m_PolygonMode)

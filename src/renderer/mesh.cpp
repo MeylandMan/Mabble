@@ -7,7 +7,7 @@ Mesh::Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshT
     this->textures = textures;
 
     for (Vertex vertex : vertices) {
-        float normalScale = 1.f;
+        float normalScale = 0.2f;
         vec3 start = vertex.Position;
         vec3 end = vertex.Position + vertex.Normal * normalScale;
         
