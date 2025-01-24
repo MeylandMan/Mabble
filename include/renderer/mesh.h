@@ -20,16 +20,20 @@ public:
     float getShininess() { return m_Shiny; }
     void deleteMesh();
     void Draw(Shader& shader);
+    void DrawNormals();
 public:
     vector<Vertex> vertices;
+    vector<float> normals;
     vector<unsigned int> indices;
     vector<MeshTexture> textures;
     unsigned int VAO = 0;
+    unsigned int NORMAL_VAO = 0;
 protected:
     float shininess;
 private:
     float m_Shiny = 32.f;
     unsigned int VBO = 0, EBO = 0;
+    unsigned int NORMAL_VBO = 0;
     void setupMesh();
-    
+    void setupNormals();
 };

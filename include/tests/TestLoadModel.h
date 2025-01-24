@@ -27,6 +27,7 @@ namespace test {
 		ImGui::FileBrowser fileDialog;
 		string m_ModelPath = RESOURCES_PATH "objects/Toon Link/Toon Link.obj";
 		Shader m_Shader;
+		Shader m_NormalShader;
 		Model m_Model = Model(m_ModelPath);
 
 		glm::mat4 m_ModelMatrix;

@@ -3,6 +3,7 @@
 namespace test {
 	TestLoadModel::TestLoadModel() {
 		m_Shader.loadShaderProgramFromFile(SHADERS_PATH "LoadingModel/Model.vert", SHADERS_PATH "LoadingModel/Model.frag");
+		m_NormalShader.loadShaderProgramFromFile(SHADERS_PATH "Default/normal.vert", SHADERS_PATH "Default/normal.frag");
 
 		// (optional) set browser properties
 		fileDialog.SetTitle("Model file explorer");
@@ -31,7 +32,7 @@ namespace test {
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
+		m_Projection = glm::perspective(glm::radians(camera->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10.f);
 
 		// draw in wireframe
 		if(m_PolygonMode)
@@ -54,7 +55,18 @@ namespace test {
 		m_ModelMatrix = glm::scale(m_ModelMatrix, m_ModelScale);
 		m_Shader.setUniformMatrix4f("u_Model", m_ModelMatrix);
 		renderer.DrawModel(m_Model, m_Shader);
+
+		m_NormalShader.bind();
+
+		m_NormalShader.setUniformMatrix4f("u_Model", m_ModelMatrix);
+		m_NormalShader.setUniformMatrix4f("u_View", *view);
+		m_NormalShader.setUniformMatrix4f("u_Proj", m_Projection);
+		renderer.DrawModelNormals(m_Model);
+		
+		
+		
 	}
+
 
 	void TestLoadModel::onImGUI() {
 		if (ImGui::Button("Choose Model"))

@@ -39,7 +39,7 @@ public:
         return *this;
     }
     void Draw(Shader& shader);
-
+    void DrawNormals();
     vector<MeshTexture> textures_loaded;
     vector<Mesh>meshes;
     string directory;

@@ -91,11 +91,8 @@ void main()
 	*/
 	
 
-	#if !1
-	if(!u_NegativeTexCoord)
-        fragColor = texture(material.diffuse1, v_TexCoords);
-    else
-        fragColor = texture(material.diffuse1, vec2(v_TexCoords.x, -v_TexCoords.y));
+	#if 1
+    fragColor = texture(material.diffuse1, texcoords);
 	#else
 	fragColor = vec4(result, 1.0);
 	#endif

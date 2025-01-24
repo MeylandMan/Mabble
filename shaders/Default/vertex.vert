@@ -18,6 +18,5 @@ void main()
 	v_Normal = mat3(inverse(u_Model)) * in_Normal;
 	v_TexCoords = in_Texcoords;
 
-	mat4 MATRIX_VIEW_PROJECTION = u_Model * u_View * u_Proj;
-	gl_Position = vec4(in_Position, 1) * MATRIX_VIEW_PROJECTION;
+	gl_Position = vec4(FragPos, 1) * u_View * u_Proj;
 }

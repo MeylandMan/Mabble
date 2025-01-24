@@ -223,3 +223,9 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 
     return textureID;
 }
+
+void Model::DrawNormals() {
+    for (Mesh mesh : meshes) {
+        mesh.DrawNormals();
+    }
+}

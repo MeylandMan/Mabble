@@ -6,8 +6,24 @@ Mesh::Mesh(vector<Vertex>& vertices, vector<unsigned int>& indices, vector<MeshT
     this->indices = indices;
     this->textures = textures;
 
-    // now that we have all the required data, set the vertex buffers and its attribute pointers.
+    for (Vertex vertex : vertices) {
+        float normalScale = 1.f;
+        vec3 start = vertex.Position;
+        vec3 end = vertex.Position + vertex.Normal * normalScale;
+        
+
+        normals.push_back(start.x);
+        normals.push_back(start.y);
+        normals.push_back(start.z);
+
+        normals.push_back(end.x);
+        normals.push_back(end.y);
+        normals.push_back(end.z);
+    }
+
+    setupNormals();
     setupMesh();
+   
 }
 
 void Mesh::deleteMesh() {
@@ -22,7 +38,7 @@ void Mesh::deleteMesh() {
     VAO = VBO = EBO = 0;
 }
 
-void Mesh::Draw(Shader & shader)
+void Mesh::Draw(Shader& shader)
 {
     // bind appropriate textures
     unsigned int diffuseNr = 1;
@@ -68,6 +84,7 @@ void Mesh::Draw(Shader & shader)
     glBindVertexArray(0);
 
     // always good practice to set everything back to defaults once configured.
+    for (unsigned int i = 0; i < textures.size(); i++) { glBindTexture(GL_TEXTURE_2D, 0); }
     glActiveTexture(GL_TEXTURE0);
 }
 
@@ -113,5 +130,30 @@ void Mesh::setupMesh()
     // weights
     glEnableVertexAttribArray(6);
     glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    glBindVertexArray(0);
+}
+
+void Mesh::setupNormals() {
+
+    glGenVertexArrays(1, &NORMAL_VAO);
+    glGenBuffers(1, &NORMAL_VBO);
+
+    // Bind
+    glBindVertexArray(NORMAL_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, NORMAL_VBO);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float), &normals[0], GL_STATIC_DRAW);
+
+
+    // set the vertex attribute pointers
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    // Unbind
+    glBindVertexArray(0);
+}
+
+void Mesh::DrawNormals() {
+    glBindVertexArray(NORMAL_VAO);
+    glDrawArrays(GL_LINES, 0, normals.size() / 3);
     glBindVertexArray(0);
 }

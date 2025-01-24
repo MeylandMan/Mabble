@@ -22,7 +22,7 @@ namespace test {
 		m_DirLight.ambient = VECTOR_ZERO;
 		m_DirLight.diffuse = VECTOR_UNIT;
 		m_DirLight.specular = VECTOR_UNIT;
-		
+
 		m_SponzaModel.m_NegativeTexCoordY = true;
 
 		m_Shader.loadShaderProgramFromFile(SHADERS_PATH "Default/vertex.vert", SHADERS_PATH "Default/fragment.frag");
@@ -31,7 +31,7 @@ namespace test {
 	DefaultTest::~DefaultTest() {
 		m_Shader.clear();
 	}
-	
+
 	void DefaultTest::onUpdate(float deltaTime) {
 		for (unsigned int i = 0; i < 4; i++) {
 			m_pointLights[i].linear = 0.09f;
@@ -73,15 +73,15 @@ namespace test {
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.5f, 0.5f, 0.5f, 1.f);
 
-		m_SpotLight.position = cam->Position; 
+		m_SpotLight.position = cam->Position;
 		m_SpotLight.direction = cam->Front;
-		m_SpotLight.ambient = VECTOR_ZERO; 
-		m_SpotLight.diffuse = VECTOR_UNIT; 
+		m_SpotLight.ambient = VECTOR_ZERO;
+		m_SpotLight.diffuse = VECTOR_UNIT;
 		m_SpotLight.specular = VECTOR_UNIT;
-		m_SpotLight.constant = 1.f; 
-		m_SpotLight.linear = 0.09f; 
+		m_SpotLight.constant = 1.f;
+		m_SpotLight.linear = 0.09f;
 		m_SpotLight.quadratic = 0.032f;
-		m_SpotLight.cutOff = 12.5f; 
+		m_SpotLight.cutOff = 12.5f;
 		m_SpotLight.outerCutOff = 15.f;
 
 		m_Projection = glm::perspective(glm::radians(cam->Zoom), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 10000.f);
