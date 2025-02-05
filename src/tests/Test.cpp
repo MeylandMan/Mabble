@@ -97,6 +97,7 @@ namespace test {
 		m_Shader.setUniform3f("dirLight.diffuse", m_DirLight.diffuse);
 		m_Shader.setUniform3f("dirLight.specular", m_DirLight.specular);
 
+		
 		//Point Lights
 		for (unsigned int i = 0; i < 4; i++) {
 
@@ -114,9 +115,12 @@ namespace test {
 			m_Shader.setUniform1f(temp.c_str(), m_pointLights[i].linear);
 			temp = std::format("pointLights[{}].quadratic", i);
 			m_Shader.setUniform1f(temp.c_str(), m_pointLights[i].quadratic);
+			s_PointLights++;
 		}
+		m_Shader.setUniform1f("NR_POINT_LIGHT", s_PointLights);
 
 		//Camera Spotlight
+		
 		m_Shader.setUniform3f("spotLight.position", m_SpotLight.position);
 		m_Shader.setUniform3f("spotLight.direction", m_SpotLight.direction);
 
@@ -130,6 +134,8 @@ namespace test {
 
 		m_Shader.setUniform1f("spotLight.cutOff", glm::cos(glm::radians(m_SpotLight.cutOff)));
 		m_Shader.setUniform1f("spotLight.outerCutOff", glm::cos(glm::radians(m_SpotLight.outerCutOff)));
+		s_SpotLights++;
+		m_Shader.setUniform1f("NR_SPOT_LIGHT", s_SpotLights);
 
 		//Sponza
 		{

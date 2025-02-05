@@ -63,6 +63,9 @@ namespace test {
 		DirLight m_DirLight;
 		SpotLight m_SpotLight;
 		PointLight m_pointLights[4];
+		static unsgined int s_PointLights = 0;
+		static  unsgined int s_SpotLights = 0;
+
 		//string m_SponzaModelPath = RESOURCES_PATH "objects/Sponza/Sponza.gltf";
 		//string m_SponzaModelPath = RESOURCES_PATH "objects/Toon Link/Toon Link.obj";
 		string m_SponzaModelPath = RESOURCES_PATH "objects/backpack/backpack.obj";
