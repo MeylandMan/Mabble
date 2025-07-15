@@ -16,3 +16,7 @@
 [submodule "thirdparty/msdf-atlas-gen"]
 	path = thirdparty/msdf-atlas-gen
 	url = https://github.com/MeylandMan/msdf-atlas-gen.git
+[submodule "thirdparty/imgui"]
+	path = thirdparty/imgui
+	url = https://github.com/MeylandMan/imgui.git
+	branch = docking
