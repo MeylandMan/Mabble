@@ -1,5 +1,7 @@
 if(NOT DEFINED ENV{VULKAN_SDK})
     message(FATAL_ERROR "Environment variable \"VULKAN_SDK\" not defined.")
+else()
+    message(STATUS "VULKAN_SDK: $ENV{VULKAN_SDK}")
 endif()
 
 function(register_macro type name path)
@@ -24,15 +26,15 @@ register_macro("include" STB_IMAGE ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/stb_im
 
 set(VULKAN_SDK $ENV{VULKAN_SDK})
 
-register_macro("thirdparty" VULKAN "${VULKAN_SDK}/vulkan-1.lib")
-register_macro("thirdparty" VULKAN_UTILS "${VULKAN_SDK}/VkLayer_utils.lib")
+register_macro("thirdparty" VULKAN "${VULKAN_SDK}/Lib/vulkan-1.lib")
+register_macro("thirdparty" VULKAN_UTILS "${VULKAN_SDK}/Lib/VkLayer_utils.lib")
 
 
-register_macro("thirdparty" SHADERCD "${VULKAN_SDK}/shaderc_sharedd.lib")
-register_macro("thirdparty" SPRIV_CROSSD "${VULKAN_SDK}/spirv-cross-cored.lib")
-register_macro("thirdparty" SPRIV_CROSS_GLSLD "${VULKAN_SDK}/spirv-cross-glsld.lib")
-register_macro("thirdparty" SPRIV_TOOLSD "${VULKAN_SDK}/SPIRV-Toolsd.lib")
+register_macro("thirdparty" SHADERCD "${VULKAN_SDK}/Lib/shaderc_sharedd.lib")
+register_macro("thirdparty" SPRIV_CROSSD "${VULKAN_SDK}/Lib/spirv-cross-cored.lib")
+register_macro("thirdparty" SPRIV_CROSS_GLSLD "${VULKAN_SDK}/Lib/spirv-cross-glsld.lib")
+register_macro("thirdparty" SPRIV_TOOLSD "${VULKAN_SDK}/Lib/SPIRV-Toolsd.lib")
 
-register_macro("thirdparty" SHADERC "${VULKAN_SDK}/shaderc_shared.lib")
-register_macro("thirdparty" SPRIV_CROSS "${VULKAN_SDK}/spirv-cross-core.lib")
-register_macro("thirdparty" SPRIV_CROSS_GLSL "${VULKAN_SDK}/spirv-cross-glsl.lib")
+register_macro("thirdparty" SHADERC "${VULKAN_SDK}/Lib/shaderc_shared.lib")
+register_macro("thirdparty" SPRIV_CROSS "${VULKAN_SDK}/Lib/spirv-cross-core.lib")
+register_macro("thirdparty" SPRIV_CROSS_GLSL "${VULKAN_SDK}/Lib/spirv-cross-glsl.lib")
