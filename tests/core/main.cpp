@@ -1,5 +1,5 @@
 #include <iostream>
-#include <mabble.h>
+#include <mabble/mabble.h>
 
 int main() {
 
