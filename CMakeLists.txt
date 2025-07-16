@@ -6,9 +6,10 @@ message(STATUS "Build Mabble: ${VERSION}")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(MABBLE_BUILD_OPENGL "Build OpenGL mabble" ON)
 
+include(cmake/build_library.cmake)
 set(MABBLE_LIBRARY_TYPE "${MABBLE_LIBRARY_TYPE}" CACHE STRING
     "Library type override for Mabble (SHARED, STATIC, OBJECT, or empty to follow BUILD_SHARED_LIBS)")
 

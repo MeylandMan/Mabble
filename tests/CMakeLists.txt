@@ -1,4 +1,9 @@
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+if(BUILD_SHARED_LIBS)
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+else()
+	set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 set(EXECUTABLE_NAME "prototype")
 
 project(${EXECUTABLE_NAME})
@@ -28,10 +33,14 @@ if(MSVC)
 	#remove console
 	#set_target_properties(${EXECUTABLE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 	
-	set_property(TARGET ${EXECUTABLE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	if(BUILD_SHARED_LIBS)
+		set_property(TARGET ${EXECUTABLE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+	else()
+		set_property(TARGET ${EXECUTABLE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+	endif()
 
 endif()
 
 target_include_directories(${EXECUTABLE_NAME} PUBLIC ${MY_HEADERS})
 
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE mabble glfw imgui assimp glm spdlog )
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE mabble glfw imgui glm spdlog )
