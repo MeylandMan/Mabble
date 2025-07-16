@@ -8,10 +8,6 @@ file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
-file(GLOB_RECURSE MY_HEADERS CONFIGURE_DEPENDS 
-    "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
-)
-
 
 add_executable(${EXECUTABLE_NAME})
 
@@ -32,6 +28,6 @@ if(MSVC)
 
 endif()
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC ${MY_HEADERS})
+target_include_directories(${EXECUTABLE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE mabble glfw imgui assimp glm spdlog )

@@ -1,6 +1,8 @@
 #include <iostream>
+#include <mabble.h>
 
 int main() {
-	std::cout << "Hello, World!" << std::endl;
+
+	Mabble::TempInit();
 	return 0;
 }

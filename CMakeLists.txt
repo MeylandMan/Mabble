@@ -6,8 +6,22 @@ message(STATUS "Build Mabble: ${VERSION}")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(MABBLE_BUILD_OPENGL "Build OpenGL mabble" ON)
+
+#--------------------------------------------------------------------
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT ON CACHE BOOL "" FORCE)
+#--------------------------------------------------------------------
 
 set(MABBLE_LIBRARY_TYPE "${MABBLE_LIBRARY_TYPE}" CACHE STRING
     "Library type override for Mabble (SHARED, STATIC, OBJECT, or empty to follow BUILD_SHARED_LIBS)")

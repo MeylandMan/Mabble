@@ -1,5 +1,4 @@
 file(GLOB_RECURSE MB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-set(MB_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}")
 
 add_library(mabble ${MABBLE_LIBRARY_TYPE})
 message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
@@ -20,13 +19,10 @@ set_target_properties(mabble PROPERTIES
     COMPILE_PDB_NAME_RELEASE "Mabble_Release"
 )
 
-option(MB_NO_PCH "Desactivate precompiled headers" OFF)
-if(NOT MB_NO_PCH)
-    target_precompile_headers(mabble PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/mbpch.h")
-endif()
+target_sources(mabble PRIVATE ${MB_SOURCES} "core/temp.h")
+target_include_directories(mabble PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/")
 
-target_sources(mabble PRIVATE ${MB_SOURCES})
-target_include_directories(mabble PRIVATE ${MB_HEADERS})
+target_include_directories(mabble PUBLIC "${CMAKE_SOURCE_DIR}/include/")
 
 target_link_libraries(mabble PRIVATE
 	glad
