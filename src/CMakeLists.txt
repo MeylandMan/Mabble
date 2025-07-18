@@ -6,6 +6,7 @@ message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
 target_compile_definitions(mabble PUBLIC
     $<$<CONFIG:Debug>:MABBLE_DEBUG>
     $<$<CONFIG:Release>:MABBLE_RELEASE>
+    MABBLE_VERSION="${MABBLE_FULL_VERSION}"
 )
 
 # Activating debug an optimization

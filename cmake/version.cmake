@@ -12,4 +12,13 @@ set(_minor "${CMAKE_MATCH_1}")
 string(REGEX MATCH "\"patch\"[ \t]*:[ \t]*([0-9]+)" _patch_match "${_mabble_json}")
 set(_patch "${CMAKE_MATCH_1}")
 
+string(REGEX MATCH "\"status\"[ \t]*:[ \t]*\"([^\"]+)\"" _name_match "${_mabble_json}")
+set(MABBLE_PROJECT_STATUS "${CMAKE_MATCH_1}")
+
 set(MABBLE_VERSION "${_major}.${_minor}.${_patch}")
+
+if(MABBLE_PROJECT_STATUS STREQUAL "")
+	set(MABBLE_FULL_VERSION "${MABBLE_VERSION}")
+else()
+	set(MABBLE_FULL_VERSION "${MABBLE_VERSION}-${MABBLE_PROJECT_STATUS}")
+endif()

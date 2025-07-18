@@ -1,12 +1,11 @@
 #include "../mbtpch.h"
 #include "Application.h"
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 	Logger::Init();
-	LOGGER_INFO("Mabble version: undefined");
 
-	Application* app = new Application(1280, 720, "Mabble");
+	Application* app = new Application(1280, 720, "Mabble v" MABBLE_VERSION);
 	app->Run();
 	delete app;
 
