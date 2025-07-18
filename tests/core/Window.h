@@ -1,39 +1,65 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <string>
+#include <functional>
 
-class Window
-{
+#include "events/Event.h"
+
+enum class CursorMode {
+	Normal = 0,
+	Captured,
+	Hidden,
+	Disabled
+};
+
+enum class WindowMode {
+
+	Windowed = 0,
+	Fullscreen,
+	Borderless
+
+};
+
+struct WindowProps {
+	std::string Title;
+	uint32_t Width;
+	uint32_t Height;
+	CursorMode cursorMode;
+	WindowMode Mode;
+
+	WindowProps(const std::string& title = "Untitled",
+		uint32_t width = 1280,
+		uint32_t height = 720,
+		CursorMode cursorMode = CursorMode::Normal,
+		WindowMode mode = WindowMode::Windowed
+	)
+		: Title(title), Width(width), Height(height), cursorMode(cursorMode), Mode(mode) {
+	}
+};
+
+// Interface representing a desktop system based Window
+class Window {
 public:
-	Window(int width, int height, const std::string& title);
-	~Window();
+	using EventCallbackFn = std::function<void(std::shared_ptr<Event>)>;
 
-	void PollEvents() const;
-	bool ShouldClose() const;
-	void SwapBuffers() const;
+	virtual ~Window() {}
 
-	int GetWidth() const { return m_Width; }
-	int GetHeight() const { return m_Height; }
-	GLFWwindow* GetNativeWindow() const { return m_Window; }
+	virtual void OnUpdate() = 0;
 
-public:
+	virtual uint32_t GetWidth() const = 0;
+	virtual uint32_t GetHeight() const = 0;
 
-	void SetKeyCallback(GLFWkeyfun callback);
-	void SetMouseButtonCallback(GLFWmousebuttonfun callback);
-	void SetCursorPosCallback(GLFWcursorposfun callback);
-	void SetFramebufferSizeCallback(GLFWframebuffersizefun callback);
-	void SetWindowSizeCallback(GLFWwindowsizefun callback);
-	void SetWindowCloseCallback(GLFWwindowclosefun callback);
 
-	bool IsKeyPressed(int key) const;
-	bool IsMouseButtonPressed(int button) const;
-	void GetCursorPosition(double& xpos, double& ypos) const;
+	// Window attributes
+	virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
+	virtual void SetVSync(bool enabled) = 0;
+	virtual bool IsVSync() const = 0;
 
-private:
-	int m_Width;
-	int m_Height;
-	std::string m_Title;
-	GLFWwindow* m_Window;
+	virtual void SetCursorMode(CursorMode mode) = 0;
+	virtual void SetWindowMode(WindowMode mode) = 0;
+	virtual CursorMode GetCursorMode() const = 0;
+	virtual WindowMode GetWindowMode() const = 0;
+
+	virtual void* GetNativeWindow() const = 0;
+
+	static std::unique_ptr<Window> Create(const WindowProps& props = WindowProps());
 };

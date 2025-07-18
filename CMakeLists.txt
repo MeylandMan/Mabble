@@ -60,3 +60,4 @@ if(MABBLE_MAIN_BUILD)
     set_property(TARGET spdlog PROPERTY FOLDER "Thirdparty")
     set_property(TARGET stb_image PROPERTY FOLDER "Thirdparty")
 endif()
+
