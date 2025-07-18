@@ -1,11 +1,11 @@
 #pragma once
 
+#include "../Base.h"
+
 #include <sstream>
+#include <functional>
 
-#define BIT(x) (1 << x)
-#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
-
-enum class EventType 
+enum class EventType
 {
 	None = 0,
 	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -14,7 +14,7 @@ enum class EventType
 	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 };
 
-enum EventCategory 
+enum EventCategory
 {
 	None = 0,
 	EventCategoryApplication = BIT(0),
@@ -51,7 +51,7 @@ public:
 class EventDispatcher
 {
 public:
-	EventDispatcher(Ref<Event> event)
+	EventDispatcher(Event& event)
 		: m_Event(event)
 	{
 	}
@@ -60,74 +60,33 @@ public:
 	template<typename T, typename F>
 	bool Dispatch(const F& func)
 	{
-		if (m_Event->GetEventType() == T::GetStaticType())
+		if (m_Event.GetEventType() == T::GetStaticType())
 		{
-			m_Event->Handled |= func(static_cast<T&>(*m_Event));
+			m_Event.Handled |= func(static_cast<T&>(m_Event));
 			return true;
 		}
 		return false;
 	}
 private:
-	Ref<Event> m_Event;
+	Event& m_Event;
 };
 
-class EventQueue
+inline std::ostream& operator<<(std::ostream& os, const Event& e)
 {
-public:
-	using EventCallback = std::function<void(Ref<Event>)>;
+	return os << e.ToString();
+}
 
-	void PushEvent(Ref<Event> event)
-	{
-		m_EventQueue.push(event);
-	}
-
-	void ProcessEvents()
-	{
-		while (!m_EventQueue.empty())
-		{
-			auto event = m_EventQueue.front();
-			m_EventQueue.pop();
-
-			// Dispatch the event to the registered callback
-			if (m_EventCallback)
-			{
-				m_EventCallback(event);
-			}
-		}
-	}
-
-	void SetEventCallback(const EventCallback& callback)
-	{
-		m_EventCallback = callback;
-	}
-
-private:
-	std::queue<Ref<Event>> m_EventQueue;
-	EventCallback m_EventCallback;
-};
 
 namespace fmt {
 	template <>
-	struct formatter<Nanonite::Event> {
+	struct formatter<Event> {
 		constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
 			return ctx.begin();
 		}
 
 		template <typename FormatContext>
-		auto format(const Nanonite::Event& e, FormatContext& ctx) const -> decltype(ctx.out()) {
+		auto format(const Event& e, FormatContext& ctx) const -> decltype(ctx.out()) {
 			return fmt::format_to(ctx.out(), "{}", e.ToString());
-		}
-	};
-
-	template <>
-	struct formatter<Nanonite::Ref<Nanonite::Event>> {
-		constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
-			return ctx.begin();
-		}
-
-		template <typename FormatContext>
-		auto format(const Nanonite::Ref<Nanonite::Event>& e, FormatContext& ctx) const -> decltype(ctx.out()) {
-			return fmt::format_to(ctx.out(), "{}", e->ToString());
 		}
 	};
 }

@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Window.h"
+#include "events/ApplicationEvent.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -8,24 +10,34 @@
 class Application
 {
 public:
+
 	Application(int width, int height, const std::string& title);
-	~Application();
+	~Application() = default;
 
 	void Run();
 
+	void OnEvent(Event& e);
+	void Close();
+	Window& GetWindow() { return *m_Window; }
+	static Application& Get() { return *s_Instance; }
+	void SubmitToMainThread(const std::function<void()>& function);
 public:
-	void OnUpdate();
-	void OnKey(int key, int scancode, int action, int mods);
-	void OnMouseButton(int button, int action, int mods);
-	void OnCursorPos(double xpos, double ypos);
-	void OnWindowResize(int width, int height);
-	void OnFramebufferResize(int width, int height);
-	void OnWindowClose();
+	bool m_Instance = true;
 
-protected:
-	void RegisterCallbacks();
+private:
+	bool OnWindowClose(WindowCloseEvent& e);
+	bool OnWindowResize(WindowResizeEvent& e);
 
-	Window* m_Window;
+	void ExecuteMainThreadQueue();
+private:
+	std::unique_ptr<Window> m_Window;
 
-	unsigned int m_ImageTexture = 0;
+	bool m_Running = true;
+	bool m_Minimized = false;
+	float m_LastFrameTime = 0.0f;
+
+	std::vector<std::function<void()>> m_MainThreadQueue;
+	std::mutex m_MainThreadQueueMutex;
+private:
+	static Application* s_Instance;
 };

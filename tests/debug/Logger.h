@@ -74,13 +74,9 @@ namespace fmt {
 	};
 }
 
-#ifdef MABBLE_DEBUG
-
 #define LOGGER_TRACE(...)		Logger::GetLogger()->trace(__VA_ARGS__)
 #define LOGGER_INFO(...)		Logger::GetLogger()->info(__VA_ARGS__)
 #define LOGGER_DEBUG(...)		Logger::GetLogger()->debug(__VA_ARGS__)
 #define LOGGER_WARN(...)		Logger::GetLogger()->warn(__VA_ARGS__)
 #define LOGGER_ERROR(...)		Logger::GetLogger()->error(__VA_ARGS__)
 #define LOGGER_CRITICAL(...)	Logger::GetLogger()->critical(__VA_ARGS__)
-
-#endif

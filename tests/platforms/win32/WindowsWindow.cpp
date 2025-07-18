@@ -1,4 +1,7 @@
 #include "mbtpch.h"
+
+#include <glad/glad.h>
+
 #include "WindowsWindow.h"
 
 #include "core/Input.h"
@@ -7,7 +10,6 @@
 #include "core/events/MouseEvent.h"
 #include "core/events/KeyEvent.h"
 
-#include <glad/glad.h>
 
 static uint8_t s_GLFWWindowCount = 0;
 
@@ -75,7 +77,7 @@ void WindowsWindow::Init(const WindowProps& props)
 			data.Width = width;
 			data.Height = height;
 
-			auto event = std::make_shared<WindowResizeEvent>(width, height);
+			auto event = WindowResizeEvent(width, height);
 			data.EventCallback(event);
 		});
 
@@ -83,7 +85,7 @@ void WindowsWindow::Init(const WindowProps& props)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			auto event = std::make_shared<WindowCloseEvent>();
+			auto event = WindowCloseEvent();
 			data.EventCallback(event);
 		});
 
@@ -95,19 +97,19 @@ void WindowsWindow::Init(const WindowProps& props)
 			{
 			case GLFW_PRESS:
 			{
-				auto event = std::make_shared<KeyPressedEvent>(key, 0);
+				auto event = KeyPressedEvent(key, 0);
 				data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				auto event = std::make_shared<KeyReleasedEvent>(key);
+				auto event = KeyReleasedEvent(key);
 				data.EventCallback(event);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				auto event = std::make_shared<KeyPressedEvent>(key, true);
+				auto event = KeyPressedEvent(key, true);
 				data.EventCallback(event);
 				break;
 			}
@@ -118,7 +120,7 @@ void WindowsWindow::Init(const WindowProps& props)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			auto event = std::make_shared<KeyTypedEvent>(keycode);
+			auto event = KeyTypedEvent(keycode);
 			data.EventCallback(event);
 		});
 
@@ -130,13 +132,13 @@ void WindowsWindow::Init(const WindowProps& props)
 			{
 			case GLFW_PRESS:
 			{
-				auto event = std::make_shared<MouseButtonPressedEvent>(button);
+				auto event = MouseButtonPressedEvent(button);
 				data.EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				auto event = std::make_shared<MouseButtonReleasedEvent>(button);
+				auto event = MouseButtonReleasedEvent(button);
 				data.EventCallback(event);
 				break;
 			}
@@ -147,7 +149,7 @@ void WindowsWindow::Init(const WindowProps& props)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			auto event = std::make_shared<MouseScrolledEvent>((float)xOffset, (float)yOffset);
+			auto event = MouseScrolledEvent((float)xOffset, (float)yOffset);
 			data.EventCallback(event);
 		});
 
@@ -155,7 +157,7 @@ void WindowsWindow::Init(const WindowProps& props)
 		{
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-			auto event = std::make_shared<MouseMovedEvent>((float)xPos, (float)yPos);
+			auto event = MouseMovedEvent((float)xPos, (float)yPos);
 			data.EventCallback(event);
 		});
 
@@ -175,10 +177,8 @@ void WindowsWindow::Shutdown()
 
 void WindowsWindow::OnUpdate()
 {
-
 	glfwPollEvents();
-	m_Context->SwapBuffers();
-
+	glfwSwapBuffers(m_Window);
 }
 
 void WindowsWindow::SetVSync(bool enabled)

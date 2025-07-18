@@ -39,7 +39,7 @@ struct WindowProps {
 // Interface representing a desktop system based Window
 class Window {
 public:
-	using EventCallbackFn = std::function<void(std::shared_ptr<Event>)>;
+	using EventCallbackFn = std::function<void(Event&)>;
 
 	virtual ~Window() {}
 

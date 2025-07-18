@@ -23,5 +23,7 @@
 
 #define MABBLE_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
+#define GLAD_GL_IMPLEMENTATION
+
 #include "debug/Logger.h"
 #include "Assert.h"
