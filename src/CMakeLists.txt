@@ -4,13 +4,8 @@ add_library(mabble ${MABBLE_LIBRARY_TYPE})
 message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
 
 target_compile_definitions(mabble PRIVATE
-    "$<$<CONFIG:Debug>:MB_DEBUG>"
-    "$<$<CONFIG:Release>:MB_RELEASE>"
-)
-
-target_compile_options(mabble PRIVATE
-    "$<$<CONFIG:Debug>:/MDd>"
-    "$<$<CONFIG:Release>:/MD>"
+    $<$<CONFIG:Debug>:MABBLE_DEBUG>
+    $<$<CONFIG:Release>:MABBLE_RELEASE>
 )
 
 # Activating debug an optimization

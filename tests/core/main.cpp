@@ -1,8 +1,10 @@
-#include <iostream>
-#include <mabble/mabble.h>
+#include "Application.h"
 
-int main() {
+int main(int argc, char** argv) 
+{
+	Application* app = new Application(1280, 720, "Mabble");
+	app->Run();
+	delete app;
 
-	Mabble::TempInit();
 	return 0;
 }
