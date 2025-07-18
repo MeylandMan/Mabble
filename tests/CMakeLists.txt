@@ -5,6 +5,11 @@ file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
+#removing precompiled headers from the source list
+list(REMOVE_ITEM MY_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/mbtpch.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/mbtpch.h"
+)
 
 add_executable(${EXECUTABLE_NAME})
 
@@ -13,6 +18,8 @@ set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET ${EXECUTABLE_NAME} PROPERTY CXX_EXTENSIONS OFF)
 
 target_sources(${EXECUTABLE_NAME} PRIVATE ${MY_SOURCES} )
+
+target_precompile_headers(${EXECUTABLE_NAME} PRIVATE "mbtpch.h")
 
 if(MSVC)
 	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE -D_CRT_SECURE_NO_WARNINGS)
