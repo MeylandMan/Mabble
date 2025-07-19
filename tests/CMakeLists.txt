@@ -21,6 +21,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE ${MY_SOURCES} )
 
 target_precompile_headers(${EXECUTABLE_NAME} PRIVATE "mbtpch.h")
 
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+
 if(MSVC)
 	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 
