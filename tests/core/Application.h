@@ -3,8 +3,7 @@
 #include "Window.h"
 #include "events/ApplicationEvent.h"
 
-#include <imgui.h>
-#include <imgui_internal.h>
+#include "ImGui/ImGuiLayer.h"
 
 
 class Application
@@ -18,6 +17,9 @@ public:
 
 	void OnEvent(Event& e);
 	void Close();
+
+	ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+
 	Window& GetWindow() { return *m_Window; }
 	static Application& Get() { return *s_Instance; }
 	void SubmitToMainThread(const std::function<void()>& function);
@@ -31,6 +33,7 @@ private:
 	void ExecuteMainThreadQueue();
 private:
 	std::unique_ptr<Window> m_Window;
+	ImGuiLayer* m_ImGuiLayer;
 
 	bool m_Running = true;
 	bool m_Minimized = false;

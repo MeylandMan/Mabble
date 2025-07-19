@@ -2,6 +2,7 @@
 
 #include "core/Window.h"
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 class WindowsWindow : public Window

@@ -1,7 +1,5 @@
 #include "mbtpch.h"
 
-#include <glad/glad.h>
-
 #include "WindowsWindow.h"
 
 #include "core/Input.h"
