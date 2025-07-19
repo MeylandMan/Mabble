@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.22...4.0 FATAL_ERROR)
 
-
-project(Mabble VERSION 0.0.0 LANGUAGES CXX)
-message(STATUS "Build Mabble: ${VERSION}")
+include(cmake/version.cmake)
+project(${MABBLE_PROJECT_NAME} VERSION ${MABBLE_VERSION} LANGUAGES CXX)
+message(STATUS "Build Mabble: ${MABBLE_VERSION}")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
-set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+set(EXECUTABLE_NAME "prototype")
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(MABBLE_BUILD_OPENGL "Build OpenGL mabble" ON)
+option(MABBLE_MAIN_BUILD "Build Mabble as the main project" ON)
 
 #--------------------------------------------------------------------
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -48,3 +48,16 @@ add_subdirectory(thirdparty/stb_image)
 # projects
 add_subdirectory(src)
 add_subdirectory(tests)
+
+if(MABBLE_MAIN_BUILD)
+    set_property(TARGET mabble PROPERTY FOLDER "Core")
+    set_property(TARGET ${EXECUTABLE_NAME} PROPERTY FOLDER "Core")
+
+    set_property(TARGET glfw PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET glad PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET assimp PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET imgui PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET spdlog PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET stb_image PROPERTY FOLDER "Thirdparty")
+endif()
+

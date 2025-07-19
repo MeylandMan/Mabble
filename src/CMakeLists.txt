@@ -3,14 +3,10 @@ file(GLOB_RECURSE MB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cp
 add_library(mabble ${MABBLE_LIBRARY_TYPE})
 message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
 
-target_compile_definitions(mabble PRIVATE
-    "$<$<CONFIG:Debug>:MB_DEBUG>"
-    "$<$<CONFIG:Release>:MB_RELEASE>"
-)
-
-target_compile_options(mabble PRIVATE
-    "$<$<CONFIG:Debug>:/MDd>"
-    "$<$<CONFIG:Release>:/MD>"
+target_compile_definitions(mabble PUBLIC
+    $<$<CONFIG:Debug>:MABBLE_DEBUG>
+    $<$<CONFIG:Release>:MABBLE_RELEASE>
+    MABBLE_VERSION="${MABBLE_FULL_VERSION}"
 )
 
 # Activating debug an optimization

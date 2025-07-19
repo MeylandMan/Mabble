@@ -1,8 +1,13 @@
-#include <iostream>
-#include <mabble/mabble.h>
+#include "../mbtpch.h"
+#include "Application.h"
 
-int main() {
+int main(int argc, char** argv)
+{
+	Logger::Init();
 
-	Mabble::TempInit();
+	Application* app = new Application(1280, 720, "Mabble v" MABBLE_VERSION);
+	app->Run();
+	delete app;
+
 	return 0;
 }
