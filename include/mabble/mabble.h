@@ -487,7 +487,7 @@ namespace Mabble
 		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 	};
 
-	class ShaderLibrary
+	class MABBLE_API ShaderLibrary
 	{
 	public:
 		void Add(const std::string& name, const Ref<Shader>& shader);
@@ -505,5 +505,80 @@ namespace Mabble
 		bool Exists(const std::string& name) const;
 	private:
 		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
+	};
+
+	enum class FrameBufferTextureFormat
+	{
+		None = 0,
+		RGBA8,
+		RGB8,
+		RGBA16F,
+		RGB16F,
+		RGBA32F,
+		RGB32F,
+		RGBA16I,
+		RGB16I,
+		RGBA32I,
+		RGB32I,
+		Depth24Stencil8,
+		Depth32FStencil8,
+
+		// Defaults
+		Depth = Depth24Stencil8
+	};
+
+	struct FrameBufferTextureSpec
+	{
+		FrameBufferTextureSpec() = default;
+		FrameBufferTextureSpec(FrameBufferTextureFormat format) : TextureFormat(format) {}
+
+		FrameBufferTextureFormat TextureFormat = FrameBufferTextureFormat::None;
+		//TODO: filtering, wrapping, etc.
+	};
+
+	struct FrameBufferAttachmentSpec
+	{
+		FrameBufferAttachmentSpec() = default;
+		FrameBufferAttachmentSpec(std::initializer_list<FrameBufferTextureSpec> attachments)
+			: Attachments(attachments) {}
+
+		std::vector<FrameBufferTextureSpec> Attachments;
+	};
+
+	struct FrameBufferSpec
+	{
+		uint32_t Width = 0, Height = 0;
+		FrameBufferAttachmentSpec Attachments;
+		uint32_t Samples = 1; // 0 means no multisampling
+
+		bool SwapChainTarget = false; // If true, this framebuffer will be used as a swapchain target
+	};
+
+	class MABBLE_API FrameBuffer
+	{
+	public:
+		virtual ~FrameBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
+		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) const = 0;
+
+		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;
+
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
+		virtual uint32_t GetSamples() const = 0;
+		virtual bool IsSwapChainTarget() const = 0;
+
+		virtual const FrameBufferSpec& GetSpecification() const = 0;
+		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
+		//virtual uint32_t GetDepthAttachmentRendererID() const = 0; // Later on, we might want to support multiple depth attachments
+
+
+		static Ref<FrameBuffer> Create(const FrameBufferSpec& spec);
+		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
+		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height, FrameBufferAttachmentSpec attachments);
 	};
 }
