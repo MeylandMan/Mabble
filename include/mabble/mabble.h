@@ -460,6 +460,20 @@ namespace Mabble
 	};
 
 
+	//TODO: Learn more about bitwise operations cuz WHY IS EVEYRONE USING THEM
+	enum class ShaderType
+	{
+		None = 0,
+		Vertex,
+		Fragment,
+		Geometry,
+		Pixel,
+		TessellationControl,
+		TessellationEvaluation,
+		Include, // Custom shader type for including other shaders
+		Compute
+	};
+
 	class MABBLE_API Shader
 	{
 	public:
@@ -581,4 +595,52 @@ namespace Mabble
 		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
 		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height, FrameBufferAttachmentSpec attachments);
 	};
+
+	// ---------------------------------------------------------
+	// Blend factors
+	// ----------------------------------------------------------
+
+	enum class BlendFactor : uint8_t
+	{
+		Zero = 0,
+		One,
+		SrcColor,
+		OneMinusSrcColor,
+		DstColor,
+		OneMinusDstColor,
+		SrcAlpha,
+		OneMinusSrcAlpha,
+		DstAlpha,
+		OneMinusDstAlpha,
+		SrcAlphaSaturate,
+		ConstantColor,
+		OneMinusConstantColor,
+		Src1Color,
+		OneMinusSrc1Color,
+		Src1Alpha,
+		OneMinusSrc1Alpha
+	};
+
+	enum class BlendOperation : uint8_t
+	{
+		Add = 1,
+		Subtract = 2,
+		ReverseSubtract = 3,
+		Min = 4,
+		Max = 5
+	};
+
+	enum class ColorMask : uint8_t
+	{
+		None = 0,
+		R = 1 << 0,
+		G = 1 << 1,
+		B = 1 << 2,
+		A = 1 << 3,
+		RG = R | G,
+		RB = R | B,
+		GA = G | A,
+		RGBA = R | G | B | A
+	};
+
 }
