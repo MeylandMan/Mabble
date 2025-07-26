@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Base.h"
+#include "core/Base.h"
 #include <filesystem>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -74,9 +74,18 @@ namespace fmt {
 	};
 }
 
-#define LOGGER_TRACE(...)		Logger::GetLogger()->trace(__VA_ARGS__)
-#define LOGGER_INFO(...)		Logger::GetLogger()->info(__VA_ARGS__)
-#define LOGGER_DEBUG(...)		Logger::GetLogger()->debug(__VA_ARGS__)
-#define LOGGER_WARN(...)		Logger::GetLogger()->warn(__VA_ARGS__)
-#define LOGGER_ERROR(...)		Logger::GetLogger()->error(__VA_ARGS__)
-#define LOGGER_CRITICAL(...)	Logger::GetLogger()->critical(__VA_ARGS__)
+#if defined(_DEBUG_BUILD_)
+	#define LOGGER_TRACE(...)		Logger::GetLogger()->trace(__VA_ARGS__)
+	#define LOGGER_INFO(...)		Logger::GetLogger()->info(__VA_ARGS__)
+	#define LOGGER_DEBUG(...)		Logger::GetLogger()->debug(__VA_ARGS__)
+	#define LOGGER_WARN(...)		Logger::GetLogger()->warn(__VA_ARGS__)
+	#define LOGGER_ERROR(...)		Logger::GetLogger()->error(__VA_ARGS__)
+	#define LOGGER_CRITICAL(...)	Logger::GetLogger()->critical(__VA_ARGS__)
+#else
+	#define LOGGER_TRACE(...)
+	#define LOGGER_INFO(...)
+	#define LOGGER_DEBUG(...)
+	#define LOGGER_WARN(...)
+	#define LOGGER_ERROR(...)
+	#define LOGGER_CRITICAL(...)
+#endif

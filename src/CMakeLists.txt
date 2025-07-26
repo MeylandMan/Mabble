@@ -1,11 +1,15 @@
-file(GLOB_RECURSE MB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-add_library(mabble ${MABBLE_LIBRARY_TYPE})
+add_library(mabble ${MABBLE_LIBRARY_TYPE} 
+                   "${CMAKE_SOURCE_DIR}/include/mabble/mabble.h")
 message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
 
-target_compile_definitions(mabble PUBLIC
+target_compile_definitions(mabble PRIVATE
     $<$<CONFIG:Debug>:MABBLE_DEBUG>
     $<$<CONFIG:Release>:MABBLE_RELEASE>
+    MABBLE_BUILD
+)
+
+target_compile_definitions(mabble PUBLIC
     MABBLE_VERSION="${MABBLE_FULL_VERSION}"
 )
 
@@ -15,10 +19,10 @@ set_target_properties(mabble PROPERTIES
     COMPILE_PDB_NAME_RELEASE "Mabble_Release"
 )
 
-target_sources(mabble PRIVATE ${MB_SOURCES} "core/temp.h")
-target_include_directories(mabble PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/")
+file(GLOB_RECURSE MB_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-target_include_directories(mabble PUBLIC "${CMAKE_SOURCE_DIR}/include/")
+target_sources(mabble PRIVATE ${MB_SOURCES})
+target_include_directories(mabble PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 target_link_libraries(mabble PRIVATE
 	glad

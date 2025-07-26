@@ -2,22 +2,19 @@
 
 #include <memory>
 
-#ifdef MABBLE_DEBUG
-	#ifdef MABBLE_PLATFORM_WINDOWS
-		#define MABBLE_DEBUGBREAK() __debugbreak()
-	#elif defined(MABBLE_PLATFORM_LINUX)
+#if defined(_DEBUG_BUILD_)
+	#if defined(_PLATFORM_WINDOWS_)
+		#define _DEBUGBREAK() __debugbreak()
+	#elif defined(_PLATFORM_LINUX_)
 		#include <signal.h>
-		#define MABBLE_DEBUGBREAK() raise(SIGTRAP)
+		#define _DEBUGBREAK() raise(SIGTRAP)
 	#else
 		#error "Platform doesn't support debugbreak yet!"
 	#endif
-		#define MABBLE_ENABLE_ASSERTS
+		#define _ENABLE_ASSERTS
 	#else
-		#define MABBLE_DEBUGBREAK()
+		#define _DEBUGBREAK()
 #endif
-
-#define MABBLE_EXPAND_MACRO(x) x
-#define MABBLE_STRINGIFY_MACRO(x) #x
 
 #define BIT(x) (1 << x)
 

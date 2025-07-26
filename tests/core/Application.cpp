@@ -7,7 +7,7 @@ Application* Application::s_Instance = nullptr;
 
 Application::Application(int width, int height, const std::string& title) 
 {
-	MABBLE_ASSERT(!s_Instance, "Application already exists!");
+	_ASSERT(!s_Instance, "Application already exists!");
 	s_Instance = this;
 
 	m_Window = Window::Create(WindowProps(title, width, height));

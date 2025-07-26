@@ -1,37 +1,39 @@
 cmake_minimum_required(VERSION 3.22...4.0 FATAL_ERROR)
 
 include(cmake/version.cmake)
+
+
 project(${MABBLE_PROJECT_NAME} VERSION ${MABBLE_VERSION} LANGUAGES CXX)
 message(STATUS "Build Mabble: ${MABBLE_VERSION}")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(EXECUTABLE_NAME "prototype")
 
+string(COMPARE EQUAL "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}" MABBLE_MAIN_BUILD)
+
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(MABBLE_BUILD_OPENGL "Build OpenGL mabble" ON)
-option(MABBLE_MAIN_BUILD "Build Mabble as the main project" ON)
 
-#--------------------------------------------------------------------
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
-set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
-set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT ON CACHE BOOL "" FORCE)
-#--------------------------------------------------------------------
 
 set(MABBLE_LIBRARY_TYPE "${MABBLE_LIBRARY_TYPE}" CACHE STRING
     "Library type override for Mabble (SHARED, STATIC, OBJECT, or empty to follow BUILD_SHARED_LIBS)")
 
-include(cmake/thirdparty.cmake)
-
+if (MABBLE_LIBRARY_TYPE)
+    if (MABBLE_LIBRARY_TYPE STREQUAL "SHARED")
+        set(MABBLE_BUILD_SHARED_LIBRARY TRUE)
+    else()
+        set(MABBLE_BUILD_SHARED_LIBRARY FALSE)
+    endif()
+else()
+    set(MABBLE_BUILD_SHARED_LIBRARY ${BUILD_SHARED_LIBS})
+endif()
 
 #--------------------------------------------------------------------
 # Add subdirectories
 #--------------------------------------------------------------------
+
+include(cmake/thirdparty.cmake)
 
 # tests subdirectories
 add_subdirectory(${INCLUDE_DIR_GLFW})
@@ -55,6 +57,7 @@ if(MABBLE_MAIN_BUILD)
 
     set_property(TARGET glfw PROPERTY FOLDER "Thirdparty")
     set_property(TARGET glad PROPERTY FOLDER "Thirdparty")
+    set_property(TARGET glm PROPERTY FOLDER "Thirdparty")
     set_property(TARGET assimp PROPERTY FOLDER "Thirdparty")
     set_property(TARGET imgui PROPERTY FOLDER "Thirdparty")
     set_property(TARGET spdlog PROPERTY FOLDER "Thirdparty")

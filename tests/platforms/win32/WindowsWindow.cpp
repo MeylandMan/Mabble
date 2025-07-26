@@ -37,7 +37,7 @@ void WindowsWindow::Init(const WindowProps& props)
 	if (s_GLFWWindowCount == 0)
 	{
 		int success = glfwInit();
-		MABBLE_ASSERT(success, "Could not initialize GLFW!");
+		_ASSERT(success, "Could not initialize GLFW!");
 		glfwSetErrorCallback(GLFWErrorCallback);
 	}
 

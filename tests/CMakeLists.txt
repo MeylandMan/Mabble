@@ -21,10 +21,14 @@ target_sources(${EXECUTABLE_NAME} PRIVATE ${MY_SOURCES} )
 
 target_precompile_headers(${EXECUTABLE_NAME} PRIVATE "mbtpch.h")
 
-target_compile_definitions(${EXECUTABLE_NAME} PRIVATE ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/")
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE 
+	$<$<CONFIG:Debug>:_DEBUG_BUILD_>
+    $<$<CONFIG:Release>:_RELEASE_BUILD_>
+	ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/"
+)
 
 if(MSVC)
-	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE -D_CRT_SECURE_NO_WARNINGS)
+	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
 
 	#remove console
 	#set_target_properties(${EXECUTABLE_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")

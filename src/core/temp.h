@@ -6,5 +6,6 @@ namespace Mabble
 	void TempInit() 
 	{
 		std::cout << "Mabble Initialized !" << std::endl;
+		
 	}
 }
