@@ -1,9 +1,7 @@
 #pragma once
 
 
-
-#include "../src/core/temp.h"
-
+#include <memory>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -306,6 +304,7 @@ namespace Mabble
 		}
 	};
 
+	//TODO: Maybe refactor this from class to strcut, since it is just a collection of elements
 	class MABBLE_API BufferLayout
 	{
 	public:
@@ -343,6 +342,7 @@ namespace Mabble
 		uint32_t m_Stride = 0;
 	};
 
+	// TODO: Refactor this to use a more generic way of handling vertex buffers
 	class MABBLE_API VertexBuffer
 	{
 	public:
@@ -374,6 +374,7 @@ namespace Mabble
 
 	};
 
+	//TODO: Refactor this to use a more generic way of handling vertex arrays
 	class MABBLE_API VertexArray
 	{
 	public:
@@ -597,8 +598,52 @@ namespace Mabble
 	};
 
 	// ---------------------------------------------------------
-	// Blend factors
-	// ----------------------------------------------------------
+	// Rasterizing state									   |
+	// ---------------------------------------------------------
+	
+	enum class CullMode : uint8_t
+	{
+		None = 0,
+		Front,
+		Back,
+		FrontAndBack
+	};
+
+	enum class FrontFace : uint8_t
+	{
+		ClockWise = 0,
+		CounterClockWise
+	};
+
+	enum class PolygonMode : uint8_t
+	{
+		Fill = 0,
+		Line,
+		Point
+	};
+
+	struct RasterizerState
+	{
+		CullMode Cull = CullMode::Back;
+		FrontFace Front = FrontFace::CounterClockWise;
+		PolygonMode Polygon = PolygonMode::Fill;
+		bool DepthClamp = false;
+		bool DepthTest = true;
+		bool DepthWrite = true;
+		bool ScissorTest = false;
+		bool StencilTest = false;
+
+		constexpr RasterizerState& SetCullMode(CullMode mode) { Cull = mode; return *this; }
+		constexpr RasterizerState& SetFrontFace(FrontFace face) { Front = face; return *this; }
+		constexpr RasterizerState& SetPolygonMode(PolygonMode mode) { Polygon = mode; return *this; }
+		constexpr RasterizerState& SetDepthClamp(bool enabled) { DepthClamp = enabled; return *this; }
+		constexpr RasterizerState& SetDepthTest(bool enabled) { DepthTest = enabled; return *this; }
+		constexpr RasterizerState& SetDepthWrite(bool enabled) { DepthWrite = enabled; return *this; }
+	};
+
+	// ---------------------------------------------------------
+	// Blend factors										   |
+	// ---------------------------------------------------------
 
 	enum class BlendFactor : uint8_t
 	{
@@ -621,13 +666,14 @@ namespace Mabble
 		OneMinusSrc1Alpha
 	};
 
+	// TODO: Probably use a bitmask for this (or just constants)
 	enum class BlendOperation : uint8_t
 	{
-		Add = 1,
-		Subtract = 2,
-		ReverseSubtract = 3,
-		Min = 4,
-		Max = 5
+		Add,
+		Subtract,
+		ReverseSubtract,
+		Min,
+		Max
 	};
 
 	enum class ColorMask : uint8_t
@@ -642,5 +688,4 @@ namespace Mabble
 		GA = G | A,
 		RGBA = R | G | B | A
 	};
-
 }
