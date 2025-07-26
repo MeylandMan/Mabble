@@ -4,7 +4,9 @@
 
 #include "../src/core/temp.h"
 
+#include <string>
 #include <vector>
+
 #include <cstdint>
 #include <cstring>
 
@@ -61,7 +63,90 @@ namespace Mabble
 		OpenGL
 	};
 
+	struct Color
+	{
+		float r, g, b, a;
 
+		Color() : r(0.0f), g(0.0f), b(0.0f), a(1.0f) {}
+		Color(float scalar) : r(scalar), g(scalar), b(scalar), a(1.0f) {}
+		Color(float r, float g, float b, float a = 1.0f) : r(r), g(g), b(b), a(a) {}
+
+		bool operator==(const Color& other) const
+		{
+			return r == other.r && g == other.g && b == other.b && a == other.a;
+		}
+		bool operator!=(const Color& other) const
+		{
+			return !(*this == other);
+		}
+		operator std::string() const
+		{
+			return ToHexWithAlpha();
+		}
+
+		static Color FromRGBA(float r, float g, float b, float a = 1.0f)
+		{
+			return Color(r / 255.0f, g / 255.0f, b / 255.0f, a);
+		}
+
+		static Color FromHex(uint32_t hex)
+		{
+			float r = ((hex >> 16) & 0xFF) / 255.0f;
+			float g = ((hex >> 8) & 0xFF) / 255.0f;
+			float b = (hex & 0xFF) / 255.0f;
+			return Color(r, g, b);
+		}
+
+		static Color FromHex(uint32_t hex, float alpha)
+		{
+			float r = ((hex >> 16) & 0xFF) / 255.0f;
+			float g = ((hex >> 8) & 0xFF) / 255.0f;
+			float b = (hex & 0xFF) / 255.0f;
+			return Color(r, g, b, alpha);
+		}
+
+		static Color FromHex(const std::string& hex)
+		{
+			if (hex.size() != 7 && hex.size() != 9)
+				return Color::White();
+			uint32_t color = std::stoul(hex.substr(1), nullptr, 16);
+			if (hex.size() == 9) // If alpha is provided
+			{
+				float alpha = ((color >> 24) & 0xFF) / 255.0f;
+				return Color::FromHex(color & 0xFFFFFF, alpha);
+			}
+			return Color::FromHex(color);
+		}
+
+		std::string ToHex() const
+		{
+			uint32_t rHex = static_cast<uint32_t>(r * 255.0f);
+			uint32_t gHex = static_cast<uint32_t>(g * 255.0f);
+			uint32_t bHex = static_cast<uint32_t>(b * 255.0f);
+			return "#" + std::to_string((rHex << 16) | (gHex << 8) | bHex);
+		}
+		std::string ToHexWithAlpha() const
+		{
+			uint32_t rHex = static_cast<uint32_t>(r * 255.0f);
+			uint32_t gHex = static_cast<uint32_t>(g * 255.0f);
+			uint32_t bHex = static_cast<uint32_t>(b * 255.0f);
+			uint32_t aHex = static_cast<uint32_t>(a * 255.0f);
+			return "#" + std::to_string((aHex << 24) | (rHex << 16) | (gHex << 8) | bHex);
+		}
+		
+		// Static Colors
+
+		static Color White() { return Color(1.0f, 1.0f, 1.0f); }
+		static Color Gray() { return Color(0.5f, 0.5f, 0.5f); }
+		static Color Black() { return Color(0.0f, 0.0f, 0.0f); }
+		static Color Red() { return Color(1.0f, 0.0f, 0.0f); }
+		static Color Green() { return Color(0.0f, 1.0f, 0.0f); }
+		static Color Blue() { return Color(0.0f, 0.0f, 1.0f); }
+		static Color Yellow() { return Color(1.0f, 1.0f, 0.0f); }
+		static Color Cyan() { return Color(0.0f, 1.0f, 1.0f); }
+		static Color Magenta() { return Color(1.0f, 0.0f, 1.0f); }
+		static Color Transparent() { return Color(0.0f, 0.0f, 0.0f, 0.0f); }
+	};
 
 	// ---------------------------------------------------------
 	struct Buffer
@@ -286,5 +371,89 @@ namespace Mabble
 
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
 
+	};
+
+	class MABBLE_API VertexArray
+	{
+	public:
+		virtual ~VertexArray() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) = 0;
+		virtual void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
+
+		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
+		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
+
+		static Ref<VertexArray> Create();
+	};
+
+	enum class TextureType
+	{
+		None = 0,
+		Texture1D,
+		Texture1DArray,
+		Texture2D,
+		Texture2DArray,
+		Texture3D,
+		TextureCubeMap,
+		TextureCubeMapArray,
+		Texture2DMS,
+		Texture2DMSArray,
+		TextureCube
+	};
+
+	enum class ImageFormat
+	{
+		None = 0,
+		RGB,
+		RGBA,
+		BGR,
+		BGRA,
+		R8,
+		R16F,
+		R32F,
+		RG8,
+		RG16F,
+		RG32F,
+		RGB8,
+		RGB16F,
+		RGB32F,
+		RGBA8,
+		RGBA16F,
+		RGBA32F
+	};
+
+	struct TextureSpec
+	{
+		uint32_t Width = 1;
+		uint32_t Height = 1;
+		ImageFormat Format = ImageFormat::None;
+		TextureType Type = TextureType::Texture2D;
+		uint32_t Channels = 0;
+		bool GenerateMipMaps = true;
+	};
+
+	class MABBLE_API Texture
+	{
+	public:
+		virtual ~Texture() = default;
+
+		virtual const TextureSpec& GetSpecification() const = 0;
+
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
+		virtual ImageFormat GetFormat() const = 0;
+		virtual uint32_t GetRendererID() const = 0;
+
+		virtual void SetData(const void* data, uint32_t size) = 0;
+
+		virtual void Bind(uint32_t slot = 0) const = 0;
+
+		virtual bool isLoaded() const = 0;
+
+		virtual bool operator==(const Texture& other) const = 0;
 	};
 }
