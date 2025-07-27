@@ -2,13 +2,6 @@
 
 #include "core/Platforms.h"
 
-#ifdef MABBLE_PLATFORM_WINDOWS
-	#ifndef NOMINMAX
-		// See github.com/skypjack/entt/wiki/Frequently-Asked-Questions#warning-c4003-the-min-the-max-and-the-macro
-		#define NOMINMAX
-	#endif
-#endif
-
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -26,7 +19,7 @@
 #include "Debug/Logger.h"
 #include "Core/Base.h"
 
-#ifdef MABBLE_PLATFORM_WINDOWS
+#ifdef _PLATFORM_WINDOWS_
 	#include <Windows.h>
 #endif
 

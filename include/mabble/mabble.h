@@ -27,11 +27,15 @@
 #endif
 
 #if defined(MABBLE_DEBUG)
-	#define MABBLE_ENABLE_ASSERTS 1
-	#if MABBLE_ENABLE_ASSERTS
-		#include <assert.h>
-		#define MABBLE_ASSERT(x) assert(x)
-	#endif
+#	define MABBLE_ENABLE_ASSERTS 1
+#	if MABBLE_ENABLE_ASSERTS
+#		include <assert.h>
+#		define MABBLE_ASSERT(x) assert(x)
+#		define MB_GRAPHICS_ASSERT_MSG "Graphics Context is not initialized! Please initialize the graphics context before using Mabble's graphics features."
+#	endif
+#else
+#	define MABBLE_ASSERT(x)
+#	define MB_GRAPHICS_ASSERT_MSG "0"
 #endif
 
 namespace Mabble
@@ -54,7 +58,6 @@ namespace Mabble
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 	// ---------------------------------------------------------
-
 
 	enum class GAPI : uint8_t
 	{
@@ -355,9 +358,6 @@ namespace Mabble
 
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
-
-		static Ref<VertexBuffer> Create(uint32_t size);
-		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 	};
 
 	class MABBLE_API IndexBuffer
@@ -369,8 +369,6 @@ namespace Mabble
 		virtual void Unbind() const = 0;
 
 		virtual uint32_t GetCount() const = 0;
-
-		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
 
 	};
 
@@ -388,8 +386,6 @@ namespace Mabble
 
 		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
-
-		static Ref<VertexArray> Create();
 	};
 
 
@@ -495,12 +491,8 @@ namespace Mabble
 		virtual void SetTexture(const std::string& name, const Ref<Texture>& texture, uint32_t slot = 0) = 0;
 
 		virtual const std::string& GetName() const = 0;
-
-		static Ref<Shader> Create(const std::string& filepath);
-		static Ref<Shader> Create(const std::string& shaderSrc);
-		static Ref<Shader> Create(const char& shaderSrc);
-		static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 	};
+
 
 	class MABBLE_API ShaderLibrary
 	{
@@ -508,12 +500,12 @@ namespace Mabble
 		void Add(const std::string& name, const Ref<Shader>& shader);
 		void Add(const Ref<Shader>& shader);
 
-		Ref<Shader> Load(const std::string& filepath);
-		Ref<Shader> Load(const std::string& name, const std::string& filepath);
-		Ref<Shader> Load(const std::string& shaderSrc);
-		Ref<Shader> Load(const std::string& name, const std::string& shaderSrc);
-		Ref<Shader> Load(const std::string& vertexSrc, const std::string& fragmentSrc);
-		Ref<Shader> Load(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
+		Ref<Shader> LoadFile(const std::string& filepath);
+		Ref<Shader> LoadFile(const std::string& name, const std::string& filepath);
+		Ref<Shader> LoadSource(const std::string& shaderSrc);
+		Ref<Shader> LoadSource(const std::string& name, const std::string& shaderSrc);
+		Ref<Shader> LoadSources(const std::string& vertexSrc, const std::string& fragmentSrc);
+		Ref<Shader> LoadSources(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 
 		Ref<Shader> Get(const std::string& name);
 
@@ -591,109 +583,6 @@ namespace Mabble
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 		//virtual uint32_t GetDepthAttachmentRendererID() const = 0; // Later on, we might want to support multiple depth attachments
 
-
-		static Ref<FrameBuffer> Create(const FrameBufferSpec& spec);
-		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
-		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height, FrameBufferAttachmentSpec attachments);
-	};
-
-	// ---------------------------------------------------------
-	// Rendering factors									   |
-	// ---------------------------------------------------------
-	
-	// TODO: Create a Scene struct/class
-	class MABBLE_API GraphicsContext
-	{
-	public:
-		virtual ~GraphicsContext() = default;
-
-		virtual void Init() = 0;
-		virtual void SwapBuffers() = 0;
-
-		static Scope<GraphicsContext> Create(void* windowHandle);
-	};
-
-	class MABBLE_API GraphicsDevice
-	{
-	public:
-		virtual ~GraphicsDevice() = default;
-
-		virtual void Init() = 0;
-		virtual void Shutdown() = 0;
-		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
-		virtual void SetClearColor(float r, float g, float b, float a) = 0;
-		virtual void SetClearColor(const Color& color) = 0;
-		virtual void SetRasterizerState(const RasterizerState& state) = 0;
-		virtual void SetBlendState(bool enabled) = 0;
-
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
-		virtual void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0) = 0;
-		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
-	
-		virtual void SetLineWidth(float width) = 0;
-
-		static GAPI GetAPI() { return s_GAPI;}
-
-		static Scope<GraphicsDevice> Create();
-		static Scope<GraphicsDevice> Create(void* windowHandle);
-	private:
-		static GAPI s_GAPI;
-	};
-
-	class MABBLE_API RenderCommand
-	{
-	public:
-		static void Init() 
-		{
-			s_GraphicsDevice->Init();
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-		}
-
-		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetViewport(x, y, width, height);
-		}
-		static void SetClearColor(float r, float g, float b, float a)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetClearColor(r, g, b, a);
-		}
-		static void SetClearColor(const Color& color)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetClearColor(color);
-		}
-		static void SetRasterizerState(const RasterizerState& state)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetRasterizerState(state);
-		}
-		static void SetBlendState(bool enabled)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetBlendState(enabled);
-		}
-		static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->DrawIndexed(vertexArray, indexCount);
-		}
-		static void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->DrawIndexedInstanced(vertexArray, instanceCount, indexCount);
-		}
-		static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->DrawLines(vertexArray, vertexCount);
-		}
-		static void SetLineWidth(float width)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && "GraphicsDevice is not initialized!");
-			s_GraphicsDevice->SetLineWidth(width);
-		}
 	};
 
 	// ---------------------------------------------------------
@@ -787,4 +676,116 @@ namespace Mabble
 		GA = G | A,
 		RGBA = R | G | B | A
 	};
-}
+
+
+
+	// ---------------------------------------------------------
+	// Rendering factors									   |
+	// ---------------------------------------------------------
+
+
+	class MABBLE_API GraphicsContext
+	{
+	public:
+		virtual ~GraphicsContext() = default;
+
+		virtual void Init() = 0;
+		virtual void SwapBuffers() = 0;
+	};
+
+	class MABBLE_API GraphicsDevice
+	{
+	public:
+		virtual ~GraphicsDevice() = default;
+
+		virtual void Init() = 0;
+		virtual void Shutdown() = 0;
+		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
+		virtual void SetClearColor(float r, float g, float b, float a) = 0;
+		virtual void SetClearColor(const Color& color) = 0;
+		virtual void SetRasterizerState(const RasterizerState& state) = 0;
+		virtual void SetBlendState(bool enabled) = 0;
+
+		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
+		virtual void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0) = 0;
+		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
+
+		virtual void SetLineWidth(float width) = 0;
+
+		static GAPI GetAPI() { return s_GAPI; }
+	private:
+		static GAPI s_GAPI;
+	};
+
+	class MABBLE_API RenderCommand
+	{
+	public:
+		static void Init()
+		{
+			s_GraphicsDevice->Init();
+			MABBLE_ASSERT(s_GraphicsDevice && "The Graphics Device has not been correctly Initiliazed!");
+		}
+
+		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetViewport(x, y, width, height);
+		}
+		static void SetClearColor(float r, float g, float b, float a)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetClearColor(r, g, b, a);
+		}
+		static void SetClearColor(const Color& color)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetClearColor(color);
+		}
+		static void SetRasterizerState(const RasterizerState& state)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetRasterizerState(state);
+		}
+		static void SetBlendState(bool enabled)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetBlendState(enabled);
+		}
+		static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawIndexed(vertexArray, indexCount);
+		}
+		static void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawIndexedInstanced(vertexArray, instanceCount, indexCount);
+		}
+		static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawLines(vertexArray, vertexCount);
+		}
+		static void SetLineWidth(float width)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetLineWidth(width);
+		}
+	private:
+		static Scope<GraphicsDevice> s_GraphicsDevice;
+	};
+
+	// To be defined in the graphics API specific implementation
+	Ref<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size);
+	Ref<IndexBuffer> CreateIndexBuffer(uint32_t* indices, uint32_t count);
+	Ref<VertexArray> CreateVertexArray();
+	Ref<Shader> CreateShaderFromFile(const std::string& filepath);
+	Ref<Shader> CreateShaderFromSource(const std::string& shaderSrc);
+	Ref<Shader> CreateShaderFromSources(const std::string& vertexSrc, const std::string& fragmentSrc);
+	Ref<FrameBuffer> CreateFrameBuffer(const FrameBufferSpec& spec);
+	Ref<FrameBuffer> CreateFrameBuffer(uint32_t width, uint32_t height);
+	Ref<FrameBuffer> CreateFrameBuffer(uint32_t width, uint32_t height, FrameBufferAttachmentSpec attachments);
+	Scope<GraphicsContext> CreateGraphicsContext(void* windowHandle);
+	Scope<GraphicsDevice> CreateGraphicsDevice();
+
+} // namespace Mabble

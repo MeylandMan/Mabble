@@ -3,6 +3,10 @@ add_library(mabble ${MABBLE_LIBRARY_TYPE}
                    "${CMAKE_SOURCE_DIR}/include/mabble/mabble.h")
 message(STATUS "${CMAKE_PROJECT_NAME}: Building library...")
 
+set_property(TARGET mabble PROPERTY CXX_STANDARD 17)
+set_property(TARGET mabble PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET mabble PROPERTY CXX_EXTENSIONS OFF)
+
 target_compile_definitions(mabble PRIVATE
     $<$<CONFIG:Debug>:MABBLE_DEBUG>
     $<$<CONFIG:Release>:MABBLE_RELEASE>
