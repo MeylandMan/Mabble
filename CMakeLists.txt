@@ -6,6 +6,7 @@ include(cmake/version.cmake)
 project(${MABBLE_PROJECT_NAME} VERSION ${MABBLE_VERSION} LANGUAGES CXX)
 message(STATUS "Build Mabble: ${MABBLE_VERSION}")
 
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(EXECUTABLE_NAME "prototype")
 

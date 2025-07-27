@@ -26,7 +26,7 @@
 #include "Debug/Logger.h"
 #include "Core/Base.h"
 
-#ifdef MABBLE_PLATFORM_WINDOWS
+#ifdef _PLATFORM_WINDOWS_
 	#include <Windows.h>
 #endif
 

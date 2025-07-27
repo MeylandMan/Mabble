@@ -33,6 +33,9 @@
 #		define MABBLE_ASSERT(x) assert(x)
 #		define MB_GRAPHICS_ASSERT_MSG "Graphics Context is not initialized! Please initialize the graphics context before using Mabble's graphics features."
 #	endif
+#else
+#	define MABBLE_ASSERT(x)
+#	define MB_GRAPHICS_ASSERT_MSG "0"
 #endif
 
 namespace Mabble
@@ -583,102 +586,6 @@ namespace Mabble
 	};
 
 	// ---------------------------------------------------------
-	// Rendering factors									   |
-	// ---------------------------------------------------------
-	
-	// TODO: Create a Scene struct/class
-	class MABBLE_API GraphicsContext
-	{
-	public:
-		virtual ~GraphicsContext() = default;
-
-		virtual void Init() = 0;
-		virtual void SwapBuffers() = 0;
-	};
-
-	class MABBLE_API GraphicsDevice
-	{
-	public:
-		virtual ~GraphicsDevice() = default;
-
-		virtual void Init() = 0;
-		virtual void Shutdown() = 0;
-		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
-		virtual void SetClearColor(float r, float g, float b, float a) = 0;
-		virtual void SetClearColor(const Color& color) = 0;
-		virtual void SetRasterizerState(const RasterizerState& state) = 0;
-		virtual void SetBlendState(bool enabled) = 0;
-
-		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
-		virtual void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0) = 0;
-		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
-	
-		virtual void SetLineWidth(float width) = 0;
-
-		static GAPI GetAPI() { return s_GAPI; }
-	private:
-		static GAPI s_GAPI;
-	};
-
-	class MABBLE_API RenderCommand
-	{
-	public:
-		static void Init() 
-		{
-			s_GraphicsDevice->Init();
-			MABBLE_ASSERT(s_GraphicsDevice && "The Graphics Device has not been correctly Initiliazed!");
-		}
-
-		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetViewport(x, y, width, height);
-		}
-		static void SetClearColor(float r, float g, float b, float a)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetClearColor(r, g, b, a);
-		}
-		static void SetClearColor(const Color& color)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetClearColor(color);
-		}
-		static void SetRasterizerState(const RasterizerState& state)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetRasterizerState(state);
-		}
-		static void SetBlendState(bool enabled)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetBlendState(enabled);
-		}
-		static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->DrawIndexed(vertexArray, indexCount);
-		}
-		static void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->DrawIndexedInstanced(vertexArray, instanceCount, indexCount);
-		}
-		static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->DrawLines(vertexArray, vertexCount);
-		}
-		static void SetLineWidth(float width)
-		{
-			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
-			s_GraphicsDevice->SetLineWidth(width);
-		}
-	private:
-		static Scope<GraphicsDevice> s_GraphicsDevice;
-	};
-
-	// ---------------------------------------------------------
 	// Rasterizing state									   |
 	// ---------------------------------------------------------
 	
@@ -770,6 +677,103 @@ namespace Mabble
 		RGBA = R | G | B | A
 	};
 
+
+
+	// ---------------------------------------------------------
+	// Rendering factors									   |
+	// ---------------------------------------------------------
+
+
+	class MABBLE_API GraphicsContext
+	{
+	public:
+		virtual ~GraphicsContext() = default;
+
+		virtual void Init() = 0;
+		virtual void SwapBuffers() = 0;
+	};
+
+	class MABBLE_API GraphicsDevice
+	{
+	public:
+		virtual ~GraphicsDevice() = default;
+
+		virtual void Init() = 0;
+		virtual void Shutdown() = 0;
+		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
+		virtual void SetClearColor(float r, float g, float b, float a) = 0;
+		virtual void SetClearColor(const Color& color) = 0;
+		virtual void SetRasterizerState(const RasterizerState& state) = 0;
+		virtual void SetBlendState(bool enabled) = 0;
+
+		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0) = 0;
+		virtual void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0) = 0;
+		virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
+
+		virtual void SetLineWidth(float width) = 0;
+
+		static GAPI GetAPI() { return s_GAPI; }
+	private:
+		static GAPI s_GAPI;
+	};
+
+	class MABBLE_API RenderCommand
+	{
+	public:
+		static void Init()
+		{
+			s_GraphicsDevice->Init();
+			MABBLE_ASSERT(s_GraphicsDevice && "The Graphics Device has not been correctly Initiliazed!");
+		}
+
+		static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetViewport(x, y, width, height);
+		}
+		static void SetClearColor(float r, float g, float b, float a)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetClearColor(r, g, b, a);
+		}
+		static void SetClearColor(const Color& color)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetClearColor(color);
+		}
+		static void SetRasterizerState(const RasterizerState& state)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetRasterizerState(state);
+		}
+		static void SetBlendState(bool enabled)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetBlendState(enabled);
+		}
+		static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawIndexed(vertexArray, indexCount);
+		}
+		static void DrawIndexedInstanced(const Ref<VertexArray>& vertexArray, uint32_t instanceCount, uint32_t indexCount = 0)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawIndexedInstanced(vertexArray, instanceCount, indexCount);
+		}
+		static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->DrawLines(vertexArray, vertexCount);
+		}
+		static void SetLineWidth(float width)
+		{
+			MABBLE_ASSERT(s_GraphicsDevice && MB_GRAPHICS_ASSERT_MSG);
+			s_GraphicsDevice->SetLineWidth(width);
+		}
+	private:
+		static Scope<GraphicsDevice> s_GraphicsDevice;
+	};
 
 	// To be defined in the graphics API specific implementation
 	Ref<VertexBuffer> CreateVertexBuffer(float* vertices, uint32_t size);
